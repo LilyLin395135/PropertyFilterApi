@@ -82,11 +82,9 @@ namespace PropertyFilterApi.Controllers
     {
         public PropertyResquestValidator()
         {
-            RuleFor(c=>c.MinPrice).NotNull().WithMessage("The MinPrice field is required.")
-                .GreaterThanOrEqualTo(0).WithMessage("MinPrice needs to greater than 0.");
+            RuleFor(c=>c.MinPrice).GreaterThanOrEqualTo(0).WithMessage("MinPrice needs to greater than 0.");
 
-            RuleFor(c => c.MaxPrice).NotNull().WithMessage("The MaxPrice field is required.")
-                .GreaterThanOrEqualTo(0).WithMessage("MaxPrice needs to greater than 0.")
+            RuleFor(c => c.MaxPrice).GreaterThanOrEqualTo(0).WithMessage("MaxPrice needs to greater than 0.")
                 .GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The MaxPrice must be greater than MinPrice.");
         }
     }
