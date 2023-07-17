@@ -36,12 +36,15 @@ namespace PropertyFilterApi.Controllers
 
             if(!string.IsNullOrEmpty(keyword))
             {
-                result = allProperties.Where(c => c.PropertyName.Contains(keyword));
-                //c指的是自己→PropertyResponse
+                result = allProperties.Where(c => 
+                c.PropertyName.Contains(keyword)||
+                c.Address.City.Contains(keyword)||
+                c.Address.District.Contains(keyword)||
+                c.Address.Road.Contains(keyword)||
+                c.Address.Number.Contains(keyword));
             }
 
             return Ok(result);
-            //最後return的型別是IActionResult，http status code就屬於IActionResult
         }
 
     }
