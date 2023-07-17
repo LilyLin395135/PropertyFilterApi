@@ -21,7 +21,7 @@ namespace PropertyFilterApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get(string keyword, decimal minPrice, decimal maxPrice) 
+        public IActionResult Get(string? keyword, decimal? minPrice, decimal? maxPrice) 
         {
             var allProperties = new List<PropertyResponse>
             {
@@ -36,7 +36,7 @@ namespace PropertyFilterApi.Controllers
 
             if(!string.IsNullOrEmpty(keyword))
             {
-                result = allProperties.Where(c => 
+                result = result.Where(c => 
                 c.PropertyName.Contains(keyword)||
                 c.Address.City.Contains(keyword)||
                 c.Address.District.Contains(keyword)||
@@ -46,12 +46,12 @@ namespace PropertyFilterApi.Controllers
 
             if(minPrice>=0)
             {
-                result = allProperties.Where(c => c.AskingPrice >= minPrice);
+                result = result.Where(c => c.AskingPrice >= minPrice);
             }
 
             if(maxPrice>=0) 
             {
-                result=allProperties.Where(c=>c.AskingPrice<= maxPrice);
+                result= result.Where(c=>c.AskingPrice<= maxPrice);
             }
 
             return Ok(result);
