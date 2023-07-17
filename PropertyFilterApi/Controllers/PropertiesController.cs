@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -8,20 +9,9 @@ namespace PropertyFilterApi.Controllers
     [ApiController]
     public class PropertiesController : ControllerBase
     {
-        /// <summary>
-        /// 需求是GET: api/Properties?keyWord={keyWord}&minPrice={minPrice}&maxPrice={maxPrice}
-        /// 第一步先建立Get方法，★Get方法內放參數
-        /// 方法裡面先放題目給的假資料，先放入並建立假資料類別。
-        /// 第二步寫參數的邏輯。
-        /// 1. 若keyword不是"null或空字串(string.IsNullOrEmpty)"，就會從allProperties的PropertyName、Adress篩選符合的大樓資訊並條列
-        /// 2. 若minPrice、maxPrice大於等於零，就從allProperties的AskingPrice篩選符合的大樓資訊並條列
-        /// 3. 注意：★若參數都沒輸入，就會全部篩選出來。→result=allProperties
-        /// 4. ★一開始先設定result=allProperties，如果參數都沒輸入，就會全部篩選出來。
-        ///      如果有符合的參數就被篩選過的list覆蓋！
-        /// </summary>
-        /// <returns></returns>
+        
         [HttpGet]
-        public IActionResult Get(string? keyword, decimal? minPrice, decimal? maxPrice) 
+        public IActionResult Get(PropertyRequest propertyRequest) 
         {
             var allProperties = new List<PropertyResponse>
             {
@@ -34,24 +24,24 @@ namespace PropertyFilterApi.Controllers
 
             var result = allProperties;
 
-            if(!string.IsNullOrEmpty(keyword))
+            if(!string.IsNullOrEmpty(propertyRequest.Keyword))
             {
                 result = result.Where(c => 
-                c.PropertyName.Contains(keyword)||
-                c.Address.City.Contains(keyword)||
-                c.Address.District.Contains(keyword)||
-                c.Address.Road.Contains(keyword)||
-                c.Address.Number.Contains(keyword));
+                c.PropertyName.Contains(propertyRequest.Keyword)||
+                c.Address.City.Contains(propertyRequest.Keyword)||
+                c.Address.District.Contains(propertyRequest.Keyword)||
+                c.Address.Road.Contains(propertyRequest.Keyword)||
+                c.Address.Number.Contains(propertyRequest.Keyword));
             }
 
-            if(minPrice>=0)
+            if(propertyRequest.MinPrice >= 0)
             {
-                result = result.Where(c => c.AskingPrice >= minPrice);
+                result = result.Where(c => c.AskingPrice >= propertyRequest.MinPrice);
             }
 
-            if(maxPrice>=0) 
+            if(propertyRequest.MaxPrice >= 0) 
             {
-                result= result.Where(c=>c.AskingPrice<= maxPrice);
+                result= result.Where(c=>c.AskingPrice<= propertyRequest.MaxPrice);
             }
 
             return Ok(result);
@@ -79,5 +69,33 @@ namespace PropertyFilterApi.Controllers
         public string District { get; internal set; }
         public string Road { get; internal set; }
         public string Number { get; internal set; }
+    }
+    /// <summary>
+    /// 驗證
+    /// 1. NuGet下載FluentValidation
+    /// 2. 要驗證輸入參數，minPrice必大於零、maxPrice必大於零且必大於minPrice。把參數包進PropertyRequest一起做驗證規則。
+    /// 3. 繼承AbstractValidator
+    /// 4. PropertyResquestValidator方法，RuleFor(對象).驗證動作
+    /// </summary>
+    /// <returns></returns>
+    public class PropertyResquestValidator:AbstractValidator<PropertyRequest>
+    {
+        public PropertyResquestValidator()
+        {
+            RuleFor(c=>c.MinPrice).NotNull().WithMessage("The MinPrice field is required.")
+                .GreaterThanOrEqualTo(0).WithMessage("MinPrice needs to greater than 0.");
+
+            RuleFor(c => c.MaxPrice).NotNull().WithMessage("The MaxPrice field is required.")
+                .GreaterThanOrEqualTo(0).WithMessage("MaxPrice needs to greater than 0.")
+                .GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The MaxPrice must be greater than MinPrice.");
+        }
+    }
+
+    public class PropertyRequest
+    //string? keyword, decimal? minPrice, decimal? maxPrice
+    {
+        public string? Keyword { get; set; }
+        public decimal? MinPrice { get; set; }
+        public decimal? MaxPrice { get; set; }
     }
 }
