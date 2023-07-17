@@ -46,7 +46,12 @@ namespace PropertyFilterApi.Controllers
 
             if(minPrice>=0)
             {
-                result = allProperties.Where(c => c.AskingPrice > minPrice);
+                result = allProperties.Where(c => c.AskingPrice >= minPrice);
+            }
+
+            if(maxPrice>=0) 
+            {
+                result=allProperties.Where(c=>c.AskingPrice<= maxPrice);
             }
 
             return Ok(result);
