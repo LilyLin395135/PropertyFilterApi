@@ -44,6 +44,11 @@ namespace PropertyFilterApi.Controllers
                 c.Address.Number.Contains(keyword));
             }
 
+            if(minPrice>=0)
+            {
+                result = allProperties.Where(c => c.AskingPrice > minPrice);
+            }
+
             return Ok(result);
         }
 
