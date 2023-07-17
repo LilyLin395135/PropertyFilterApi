@@ -9,10 +9,24 @@ namespace PropertyFilterApi.Controllers
     [ApiController]
     public class PropertiesController : ControllerBase
     {
-        
+        /// <summary>
+        /// 使用驗證器
+        /// 1. new驗證器
+        /// 2. 驗證Request的結果validationResult
+        /// 3. 如果validationResult不為有效，就輸出Errors
+        /// </summary>
+        /// <param name="propertyRequest"></param>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult Get(PropertyRequest propertyRequest) 
+        public IActionResult Get([FromQuery]PropertyRequest propertyRequest) 
         {
+            var propertyRequestValidator = new PropertyResquestValidator();
+            var validationResult= propertyRequestValidator.Validate(propertyRequest);
+            if(!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+            
             var allProperties = new List<PropertyResponse>
             {
             new PropertyResponse("廣達科技大樓", 3000000000m, new Address { City = "台北市", District = "內湖區", Road = "基湖路", Number = "30號" }),
