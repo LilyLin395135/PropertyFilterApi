@@ -9,14 +9,7 @@ namespace PropertyFilterApi.Controllers
     [ApiController]
     public class PropertiesController : ControllerBase
     {
-        /// <summary>
-        /// 使用驗證器
-        /// 1. new驗證器
-        /// 2. 驗證Request的結果validationResult
-        /// 3. 如果validationResult不為有效，就輸出Errors
-        /// </summary>
-        /// <param name="propertyRequest"></param>
-        /// <returns></returns>
+        
         [HttpGet]
         public IActionResult Get([FromQuery]PropertyRequest propertyRequest) 
         {
@@ -61,53 +54,5 @@ namespace PropertyFilterApi.Controllers
             return Ok(result);
         }
 
-    }
-
-    public class PropertyResponse
-    {
-        public PropertyResponse(string propertyName, decimal askingPrice, Address address)
-        {
-            PropertyName = propertyName;
-            AskingPrice = askingPrice;
-            Address = address;
-        }
-
-        public string PropertyName { get; set; }
-        public decimal AskingPrice { get; set; }
-        public Address Address { get; set; }
-    }
-
-    public class Address
-    {
-        public string City { get; internal set; }
-        public string District { get; internal set; }
-        public string Road { get; internal set; }
-        public string Number { get; internal set; }
-    }
-    /// <summary>
-    /// 驗證
-    /// 1. NuGet下載FluentValidation
-    /// 2. 要驗證輸入參數，minPrice必大於零、maxPrice必大於零且必大於minPrice。把參數包進PropertyRequest一起做驗證規則。
-    /// 3. 繼承AbstractValidator
-    /// 4. PropertyResquestValidator方法，RuleFor(對象).驗證動作
-    /// </summary>
-    /// <returns></returns>
-    public class PropertyResquestValidator:AbstractValidator<PropertyRequest>
-    {
-        public PropertyResquestValidator()
-        {
-            RuleFor(c=>c.MinPrice).GreaterThanOrEqualTo(0).WithMessage("MinPrice needs to greater than 0.");
-
-            RuleFor(c => c.MaxPrice).GreaterThanOrEqualTo(0).WithMessage("MaxPrice needs to greater than 0.")
-                .GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The MaxPrice must be greater than MinPrice.");
-        }
-    }
-
-    public class PropertyRequest
-    //string? keyword, decimal? minPrice, decimal? maxPrice
-    {
-        public string? Keyword { get; set; }
-        public decimal? MinPrice { get; set; }
-        public decimal? MaxPrice { get; set; }
     }
 }
