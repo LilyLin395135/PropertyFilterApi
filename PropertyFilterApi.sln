@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyFilterApi", "PropertyFilterApi\PropertyFilterApi.csproj", "{D0D67BDB-6450-41FD-A97D-1046495B769B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PropertyFilterApi", "PropertyFilterApi\PropertyFilterApi.csproj", "{D0D67BDB-6450-41FD-A97D-1046495B769B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PropertyFilterHttp", "PropertyFilterHttp", "{92049113-F757-4294-9453-58B11DE008A1}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Desktop\Lily\SearchingCondoInformation-master\PropertiesFilter.http = ..\..\..\Desktop\Lily\SearchingCondoInformation-master\PropertiesFilter.http
+		PropertyFilterHttp\PropertiesFilter.http = PropertyFilterHttp\PropertiesFilter.http
 	EndProjectSection
 EndProject
 Global
