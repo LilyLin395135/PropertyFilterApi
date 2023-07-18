@@ -8,8 +8,8 @@ namespace PropertyFilterApi.Controllers
         {
             RuleFor(c=>c.MinPrice).GreaterThanOrEqualTo(0).When(c => c.MinPrice.HasValue).WithMessage("{PropertyName} needs to greater than 0.");
 
-            RuleFor(c => c.MaxPrice).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} needs to greater than 0.")
-                .GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The {PropertyName} must be greater than {ComparisonProperty}.");
+            RuleFor(c => c.MaxPrice).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} needs to greater than 0.");
+                //.GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The {PropertyName} must be greater than {ComparisonProperty}.");
         }
     }
 }

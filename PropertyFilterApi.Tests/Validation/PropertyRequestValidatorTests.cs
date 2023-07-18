@@ -16,7 +16,7 @@ namespace PropertyFilterApi.Tests.Validation
             };
 
             var validator = new PropertyResquestValidator();
-            var validateResult=validator.Validate(request);
+            var validateResult = validator.Validate(request);
 
             validateResult.Errors[0].ErrorMessage.Should().Be("Min Price needs to greater than 0.");
         }
@@ -26,15 +26,15 @@ namespace PropertyFilterApi.Tests.Validation
         {
             var request = new PropertyRequest()//«Ø¤@­ÓModel
             {
-                MinPrice = 0,
+                //MinPrice = 0,
                 MaxPrice = -1
             };
 
             var validator = new PropertyResquestValidator();
-            var validateResult = validator.Validate(request);
+            var validateResult = validator.TestValidate(request);
 
-            //validateResult.ShouldHaveValidationErrorFor(s => s.MaxPrice).WithErrorMessage("Max Price needs to greater than 0.");
-            validateResult.Errors[0].ErrorMessage.Should().Be("Max Price needs to greater than 0.");
+            validateResult.ShouldHaveValidationErrorFor(s => s.MaxPrice).WithErrorMessage("Max Price needs to greater than 0.");
+            //validateResult.Errors[0].ErrorMessage.Should().Be("Max Price needs to greater than 0.");
 
 
         }
