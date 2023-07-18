@@ -2,10 +2,10 @@
 {
     public class Address
     {
-        public string City { get; internal set; }
-        public string District { get; internal set; }
-        public string Road { get; internal set; }
-        public string Number { get; internal set; }
+        public string City { get; init; }
+        public string District { get; init; }
+        public string Road { get; init; }
+        public string Number { get; init; }
 
         public override string ToString()
         {
