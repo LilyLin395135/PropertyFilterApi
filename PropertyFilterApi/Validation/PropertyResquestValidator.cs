@@ -6,10 +6,10 @@ namespace PropertyFilterApi.Controllers
     {
         public PropertyResquestValidator()
         {
-            RuleFor(c=>c.MinPrice).GreaterThanOrEqualTo(0).WithMessage("MinPrice needs to greater than 0.");
+            RuleFor(c=>c.MinPrice).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} needs to greater than 0.");
 
-            RuleFor(c => c.MaxPrice).GreaterThanOrEqualTo(0).WithMessage("MaxPrice needs to greater than 0.")
-                .GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The MaxPrice must be greater than MinPrice.");
+            RuleFor(c => c.MaxPrice).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} needs to greater than 0.")
+                .GreaterThanOrEqualTo(c => c.MinPrice).When(c => c.MinPrice.HasValue).WithMessage("The {PropertyName} must be greater than {ComparisonProperty}.");
         }
     }
 }
