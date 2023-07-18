@@ -9,17 +9,17 @@ namespace PropertyFilterApi.Controllers
     [ApiController]
     public class PropertiesController : ControllerBase
     {
-        
+
         [HttpGet]
-        public IActionResult Get([FromQuery]PropertyRequest propertyRequest) 
+        public IActionResult Get([FromQuery] PropertyRequest propertyRequest)
         {
             var propertyRequestValidator = new PropertyResquestValidator();
-            var validationResult= propertyRequestValidator.Validate(propertyRequest);
-            if(!validationResult.IsValid)
+            var validationResult = propertyRequestValidator.Validate(propertyRequest);
+            if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
-            
+
             var allProperties = new List<PropertyResponse>
             {
             new PropertyResponse("廣達科技大樓", 3000000000m, new Address { City = "台北市", District = "內湖區", Road = "基湖路", Number = "30號" }),
@@ -31,24 +31,21 @@ namespace PropertyFilterApi.Controllers
 
             var result = allProperties;
 
-            if(!string.IsNullOrEmpty(propertyRequest.Keyword))
+            if (!string.IsNullOrEmpty(propertyRequest.Keyword))
             {
-                result = result.Where(c => 
-                c.PropertyName.Contains(propertyRequest.Keyword)||
-                c.Address.City.Contains(propertyRequest.Keyword)||
-                c.Address.District.Contains(propertyRequest.Keyword)||
-                c.Address.Road.Contains(propertyRequest.Keyword)||
-                c.Address.Number.Contains(propertyRequest.Keyword));
+                result = result.Where(c =>
+                c.PropertyName.Contains(propertyRequest.Keyword) ||
+                c.Address.ToString().Contains(propertyRequest.Keyword));
             }
 
-            if(propertyRequest.MinPrice >= 0)
+            if (propertyRequest.MinPrice >= 0)
             {
                 result = result.Where(c => c.AskingPrice >= propertyRequest.MinPrice);
             }
 
-            if(propertyRequest.MaxPrice >= 0) 
+            if (propertyRequest.MaxPrice >= 0)
             {
-                result= result.Where(c=>c.AskingPrice<= propertyRequest.MaxPrice);
+                result = result.Where(c => c.AskingPrice <= propertyRequest.MaxPrice);
             }
 
             return Ok(result);

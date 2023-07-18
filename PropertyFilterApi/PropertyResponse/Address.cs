@@ -6,5 +6,10 @@
         public string District { get; internal set; }
         public string Road { get; internal set; }
         public string Number { get; internal set; }
+
+        public override string ToString()
+        {
+            return $"{City} {District} {Road} {Number}";
+        }
     }
 }
