@@ -51,5 +51,20 @@ namespace PropertyFilterApi.Tests.Validation
 
             validateResult.ShouldHaveValidationErrorFor(s => s.MaxPrice).WithErrorMessage("The Max Price must be greater than Min Price.");
         }
+
+        [TestMethod]
+        public void Isvalid()
+        {
+            var request = new PropertyRequest()//«Ø¤@­ÓModel
+            {
+                MinPrice = 11,
+                MaxPrice = 21
+            };
+
+            var validator = new PropertyResquestValidator();
+            var validateResult = validator.TestValidate(request);
+
+            validateResult.ShouldNotHaveAnyValidationErrors();
+        }
     }
 }
