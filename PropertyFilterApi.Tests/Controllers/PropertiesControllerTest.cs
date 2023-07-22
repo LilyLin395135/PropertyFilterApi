@@ -31,22 +31,10 @@ namespace PropertyFilterApi.Tests.Controllers
             new PropertyResponse("三創數位生活園區", 2000000000m, new Address { City = "台北市", District = "南港區", Road = "市民大道六段", Number = "133號" })
             };
 
-            WhenPropertiesControllerGet(propertyRequest);
+            WhenSearchProperties(propertyRequest);
 
-            ThenListShouldBe(expectation);
+            ThenPropertiesShouldBe(expectation);
 
-        }
-
-        private void ThenListShouldBe(List<PropertyResponse> expectation)
-        {
-            _result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
-        }
-
-        private OkObjectResult? WhenPropertiesControllerGet(PropertyRequest propertyRequest)
-        {
-            var response = _propertiesController.Get(propertyRequest);//when
-            var _result = response as OkObjectResult;//從測試總管的結果知道輸出的內容，型別是OkObjectResult，因此要轉型
-            return _result;
         }
 
         [TestMethod]//testm快捷鍵
@@ -64,10 +52,9 @@ namespace PropertyFilterApi.Tests.Controllers
                 new PropertyResponse("微風台北車站", 5000000000m, new Address { City = "台北市", District = "中正區", Road = "忠孝西路一段", Number = "49號" }),
             };
 
-            var response = _propertiesController.Get(propertyRequest);
-            var result = response as OkObjectResult;
+            WhenSearchProperties(propertyRequest);
 
-            result?.Value.Should().BeEquivalentTo(expectation);
+            ThenPropertiesShouldBe(expectation);
         }
 
         [TestMethod]//testm快捷鍵
@@ -85,10 +72,20 @@ namespace PropertyFilterApi.Tests.Controllers
                 new PropertyResponse("三創數位生活園區", 2000000000m, new Address { City = "台北市", District = "南港區", Road = "市民大道六段", Number = "133號" })
             };
 
-            var response = _propertiesController.Get(propertyRequest);
-            var result = response as OkObjectResult;
+            WhenSearchProperties(propertyRequest);
 
-            result?.Value.Should().BeEquivalentTo(expectation);
+            ThenPropertiesShouldBe(expectation);
+        }
+        private void ThenPropertiesShouldBe(List<PropertyResponse> expectation)
+        {
+            _result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
+        }
+
+        private OkObjectResult? WhenSearchProperties(PropertyRequest propertyRequest)
+        {
+            var response = _propertiesController.Get(propertyRequest);//when
+            var _result = response as OkObjectResult;//從測試總管的結果知道輸出的內容，型別是OkObjectResult，因此要轉型
+            return _result;
         }
     }
 }
