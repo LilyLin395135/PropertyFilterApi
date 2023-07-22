@@ -57,7 +57,7 @@ namespace PropertyFilterApi.Tests.Controllers
             ThenPropertiesShouldBe(expectation);
         }
 
-        [TestMethod]//testm快捷鍵
+        [TestMethod]
         public void Filt_MaxPrice()
         {
             var propertyRequest = new PropertyRequest()
@@ -76,6 +76,30 @@ namespace PropertyFilterApi.Tests.Controllers
 
             ThenPropertiesShouldBe(expectation);
         }
+        [TestMethod]
+        public void Filt_All_Three_RequestElements()
+        {
+            var propertyRequest = new PropertyRequest()
+            {
+                Keyword="大樓",
+                MinPrice = 3000000000,
+                MaxPrice = 5000000000
+            };
+
+            var expectation = new List<PropertyResponse>()
+            {
+                new PropertyResponse("廣達科技大樓", 3000000000m, new Address { City = "台北市", District = "內湖區", Road = "基湖路", Number = "30號" }),
+                new PropertyResponse("富邦南港大樓", 3500000000m, new Address { City = "台北市", District = "南港區", Road = "經貿二路", Number = "188號" }),
+            };
+
+            WhenSearchProperties(propertyRequest);
+
+            ThenPropertiesShouldBe(expectation);
+        }
+
+
+
+
         private void ThenPropertiesShouldBe(List<PropertyResponse> expectation)
         {
             _result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
