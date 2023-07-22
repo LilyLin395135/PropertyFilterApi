@@ -52,7 +52,29 @@ namespace PropertyFilterApi.Tests.Controllers
             var result = response as OkObjectResult;
 
             result?.Value.Should().BeEquivalentTo(expectation);
+        }
 
+        [TestMethod]//testm快捷鍵
+        public void Filt_MaxPrice()
+        {
+            var propertiesControllers = new PropertiesController();
+
+            var propertyRequest = new PropertyRequest()
+            {
+                MaxPrice = 3000000000
+            };
+
+            var expectation = new List<PropertyResponse>()
+            {
+                new PropertyResponse("廣達科技大樓", 3000000000m, new Address { City = "台北市", District = "內湖區", Road = "基湖路", Number = "30號" }),
+                new PropertyResponse("松智路101號辦公室", 2500000000m, new Address { City = "台北市", District = "信義區", Road = "松智路", Number = "101號" }),
+                new PropertyResponse("三創數位生活園區", 2000000000m, new Address { City = "台北市", District = "南港區", Road = "市民大道六段", Number = "133號" })
+            };
+
+            var response = propertiesControllers.Get(propertyRequest);
+            var result = response as OkObjectResult;
+
+            result?.Value.Should().BeEquivalentTo(expectation);
         }
     }
 }
