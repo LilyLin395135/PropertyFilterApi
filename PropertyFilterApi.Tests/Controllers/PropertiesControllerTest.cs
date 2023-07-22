@@ -9,6 +9,7 @@ namespace PropertyFilterApi.Tests.Controllers
     public class PropertiesControllerTest
     {
         private PropertiesController _propertiesController;
+        private OkObjectResult _result;
 
         [TestInitialize]
         public void Setup() 
@@ -19,8 +20,6 @@ namespace PropertyFilterApi.Tests.Controllers
         [TestMethod]//testm快捷鍵
         public void Filt_Keyword_In_PropertyName_And_Address()
         {
-            //var propertiesControllers=new PropertiesController();
-
             var propertyRequest = new PropertyRequest()
             {
                 Keyword = "南港"
@@ -32,18 +31,22 @@ namespace PropertyFilterApi.Tests.Controllers
             new PropertyResponse("三創數位生活園區", 2000000000m, new Address { City = "台北市", District = "南港區", Road = "市民大道六段", Number = "133號" })
             };
 
+            WhenPropertiesControllerGet(propertyRequest);
+
+            _result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
+
+        }
+
+        private OkObjectResult? WhenPropertiesControllerGet(PropertyRequest propertyRequest)
+        {
             var response = _propertiesController.Get(propertyRequest);//when
-            var result = response as OkObjectResult;//從測試總管的結果知道輸出的內容，型別是OkObjectResult，因此要轉型
-
-            result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
-
+            var _result = response as OkObjectResult;//從測試總管的結果知道輸出的內容，型別是OkObjectResult，因此要轉型
+            return _result;
         }
 
         [TestMethod]//testm快捷鍵
         public void Filt_MinPrice()
         {
-            var propertiesControllers = new PropertiesController();
-
             var propertyRequest = new PropertyRequest()
             {
                 MinPrice = 3000000000
@@ -56,7 +59,7 @@ namespace PropertyFilterApi.Tests.Controllers
                 new PropertyResponse("微風台北車站", 5000000000m, new Address { City = "台北市", District = "中正區", Road = "忠孝西路一段", Number = "49號" }),
             };
 
-            var response = propertiesControllers.Get(propertyRequest);
+            var response = _propertiesController.Get(propertyRequest);
             var result = response as OkObjectResult;
 
             result?.Value.Should().BeEquivalentTo(expectation);
@@ -65,8 +68,6 @@ namespace PropertyFilterApi.Tests.Controllers
         [TestMethod]//testm快捷鍵
         public void Filt_MaxPrice()
         {
-            var propertiesControllers = new PropertiesController();
-
             var propertyRequest = new PropertyRequest()
             {
                 MaxPrice = 3000000000
@@ -79,7 +80,7 @@ namespace PropertyFilterApi.Tests.Controllers
                 new PropertyResponse("三創數位生活園區", 2000000000m, new Address { City = "台北市", District = "南港區", Road = "市民大道六段", Number = "133號" })
             };
 
-            var response = propertiesControllers.Get(propertyRequest);
+            var response = _propertiesController.Get(propertyRequest);
             var result = response as OkObjectResult;
 
             result?.Value.Should().BeEquivalentTo(expectation);
