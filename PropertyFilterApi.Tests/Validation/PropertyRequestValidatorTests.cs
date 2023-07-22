@@ -1,5 +1,3 @@
-using FluentAssertions;
-using FluentValidation.Results;
 using FluentValidation.TestHelper;
 using PropertyFilterApi.Controllers;
 using System.Linq.Expressions;

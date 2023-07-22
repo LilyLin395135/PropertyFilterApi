@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace PropertyFilterApi.Controllers
 {
@@ -11,7 +9,7 @@ namespace PropertyFilterApi.Controllers
     {
 
         [HttpGet]
-        public IActionResult Get([FromQuery] PropertyRequest propertyRequest)
+        public IActionResult Get([FromQuery] PropertyRequest propertyRequest)//寫單元測試為了讓result也轉成OKResponse型別嘗試了把IActionResult換成ActionResult<IEnumerable<PropertyResponse>>，再單元測試裡面就再點.Result。這個是比較具名的方法。
         {
             var propertyRequestValidator = new PropertyResquestValidator();
             var validationResult = propertyRequestValidator.Validate(propertyRequest);
