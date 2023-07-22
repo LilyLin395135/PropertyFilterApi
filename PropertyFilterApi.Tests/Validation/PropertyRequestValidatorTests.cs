@@ -1,12 +1,23 @@
 using FluentAssertions;
+using FluentValidation.Results;
 using FluentValidation.TestHelper;
 using PropertyFilterApi.Controllers;
+using System.Linq.Expressions;
 
 namespace PropertyFilterApi.Tests.Validation
 {
     [TestClass]
     public class PropertyRequestValidatorTests
     {
+        private PropertyResquestValidator _validator;
+        private TestValidationResult<PropertyRequest> _validationResult;
+
+        [TestInitialize] 
+        public void Setup() 
+        {
+            _validator = new PropertyResquestValidator();
+        }
+        
         [TestMethod]
         public void IsInvalid_MinPriceSmallerThanZero()
         {
@@ -15,11 +26,12 @@ namespace PropertyFilterApi.Tests.Validation
                 MinPrice = -1
             };
 
-            var validator = new PropertyResquestValidator();
-            var validateResult = validator.Validate(request);
+            WhenStartValidation(request);
 
-            validateResult.Errors[0].ErrorMessage.Should().Be("Min Price needs to greater than 0.");
+            ThenPriceShouldHaveValidationErrorFor(s => s.MinPrice, "Min Price needs to greater than 0.");
         }
+
+        
 
         [TestMethod]
         public void IsInvalid_MaxPriceSmallerThanZero()
@@ -30,11 +42,9 @@ namespace PropertyFilterApi.Tests.Validation
                 MaxPrice = -1
             };
 
-            var validator = new PropertyResquestValidator();
-            var validateResult = validator.TestValidate(request);
+            WhenStartValidation(request);
 
-            validateResult.ShouldHaveValidationErrorFor(s => s.MaxPrice).WithErrorMessage("Max Price needs to greater than 0.");
-            //validateResult.Errors[0].ErrorMessage.Should().Be("Max Price needs to greater than 0.");
+            ThenPriceShouldHaveValidationErrorFor(s => s.MaxPrice, "Max Price needs to greater than 0.");
         }
 
         [TestMethod]
@@ -46,10 +56,9 @@ namespace PropertyFilterApi.Tests.Validation
                 MaxPrice = 84
             };
 
-            var validator = new PropertyResquestValidator();
-            var validateResult = validator.TestValidate(request);
+            WhenStartValidation(request);
 
-            validateResult.ShouldHaveValidationErrorFor(s => s.MaxPrice).WithErrorMessage("The Max Price must be greater than Min Price.");
+            ThenPriceShouldHaveValidationErrorFor(s => s.MaxPrice, "The Max Price must be greater than Min Price.");
         }
 
         [TestMethod]
@@ -61,10 +70,21 @@ namespace PropertyFilterApi.Tests.Validation
                 MaxPrice = 21
             };
 
-            var validator = new PropertyResquestValidator();
-            var validateResult = validator.TestValidate(request);
+            var validateResult = _validator.TestValidate(request);
 
             validateResult.ShouldNotHaveAnyValidationErrors();
+        }
+
+        private void ThenPriceShouldHaveValidationErrorFor(
+            Expression<Func<PropertyRequest, decimal?>> memberAccessor,
+            string errorMessage)
+        {
+            _validationResult.ShouldHaveValidationErrorFor(memberAccessor).WithErrorMessage(errorMessage);
+        }
+
+        private void WhenStartValidation(PropertyRequest request)
+        {
+            _validationResult = _validator.TestValidate(request);
         }
     }
 }
