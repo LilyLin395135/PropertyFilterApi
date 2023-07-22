@@ -70,14 +70,18 @@ namespace PropertyFilterApi.Tests.Validation
                 MaxPrice = 21
             };
 
-            var validateResult = _validator.TestValidate(request);
+            WhenStartValidation(request);
+            ThenAllValidationIsValid();
+        }
 
-            validateResult.ShouldNotHaveAnyValidationErrors();
+        private void ThenAllValidationIsValid()
+        {
+            _validationResult.ShouldNotHaveAnyValidationErrors();
         }
 
         private void ThenPriceShouldHaveValidationErrorFor(
             Expression<Func<PropertyRequest, decimal?>> memberAccessor,
-            string errorMessage)
+            string errorMessage)//s => s.MaxPrice這段的型別Expression<Func<PropertyRequest, decimal?>>。要學會看
         {
             _validationResult.ShouldHaveValidationErrorFor(memberAccessor).WithErrorMessage(errorMessage);
         }
