@@ -8,10 +8,18 @@ namespace PropertyFilterApi.Tests.Controllers
     [TestClass]//testc快捷鍵
     public class PropertiesControllerTest
     {
+        private PropertiesController _propertiesController;
+
+        [TestInitialize]
+        public void Setup() 
+        {
+            _propertiesController=new PropertiesController();
+        }
+
         [TestMethod]//testm快捷鍵
         public void Filt_Keyword_In_PropertyName_And_Address()
         {
-            var propertiesControllers=new PropertiesController();
+            //var propertiesControllers=new PropertiesController();
 
             var propertyRequest = new PropertyRequest()
             {
@@ -24,7 +32,7 @@ namespace PropertyFilterApi.Tests.Controllers
             new PropertyResponse("三創數位生活園區", 2000000000m, new Address { City = "台北市", District = "南港區", Road = "市民大道六段", Number = "133號" })
             };
 
-            var response = propertiesControllers.Get(propertyRequest);//when
+            var response = _propertiesController.Get(propertyRequest);//when
             var result = response as OkObjectResult;//從測試總管的結果知道輸出的內容，型別是OkObjectResult，因此要轉型
 
             result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
