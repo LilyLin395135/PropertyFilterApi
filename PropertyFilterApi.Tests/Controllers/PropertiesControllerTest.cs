@@ -33,8 +33,13 @@ namespace PropertyFilterApi.Tests.Controllers
 
             WhenPropertiesControllerGet(propertyRequest);
 
-            _result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
+            ThenListShouldBe(expectation);
 
+        }
+
+        private void ThenListShouldBe(List<PropertyResponse> expectation)
+        {
+            _result?.Value.Should().BeEquivalentTo(expectation);//集合用.BeEquivalentTo()
         }
 
         private OkObjectResult? WhenPropertiesControllerGet(PropertyRequest propertyRequest)
