@@ -5,7 +5,7 @@ using PropertyFilterApi.Controllers;
 
 namespace PropertyFilterApi.Tests.Controllers
 {
-    [TestClass]//testc快捷鍵
+    [TestClass]
     public class PropertiesControllerTest
     {
         private PropertiesController? _propertiesController;
@@ -14,11 +14,14 @@ namespace PropertyFilterApi.Tests.Controllers
         [TestInitialize]
         public void Setup()
         {
-            var propertiesService = Substitute.For<IPropertiesService>();
+            var propertiesService = Substitute.For<IPropertiesService>();//用propertiesService替代"Substitute.For<>()"放資料的介面IPropertiesService
             propertiesService.GetProperties().Returns(GetPropertiesInTaipei());
-            _propertiesController = new PropertiesController(propertiesService);
+            //NSubstitute的方法Returns()會指定前面情況的回傳結果
+            //這裡就是回傳GetPropertiesInTaipei
 
-            IEnumerable<PropertyResponse> GetPropertiesInTaipei()
+            _propertiesController = new PropertiesController(propertiesService);//這裡放入Substitute和Returns後的propertiesService
+
+            IEnumerable<PropertyResponse> GetPropertiesInTaipei()//介面實作
             {
                 return new List<PropertyResponse>
                 {
@@ -31,7 +34,7 @@ namespace PropertyFilterApi.Tests.Controllers
             }
         }
 
-        [TestMethod]//testm快捷鍵
+        [TestMethod]
         public void Filt_Keyword_In_PropertyName_And_Address()
         {
             var propertyRequest = new PropertyRequest()
@@ -51,7 +54,7 @@ namespace PropertyFilterApi.Tests.Controllers
 
         }
 
-        [TestMethod]//testm快捷鍵
+        [TestMethod]
         public void Filt_MinPrice()
         {
             var propertyRequest = new PropertyRequest()

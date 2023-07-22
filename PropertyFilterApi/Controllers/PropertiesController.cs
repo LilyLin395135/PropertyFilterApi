@@ -9,13 +9,15 @@ namespace PropertyFilterApi.Controllers
     {
         private IPropertiesService _propertiesService;
 
-        public PropertiesController(IPropertiesService propertiesService)
+        public PropertiesController(IPropertiesService propertiesService)//這裡也就開了洞，讓單元測試可以放測試自己建的另外一組假資料進來
         {
             _propertiesService=propertiesService;
+            //接著要建立builder.Services.AddScoped<IPropertiesService, PropertiesService>();在Program
+            //才會知道我們new介面也要newPropertiesService
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] PropertyRequest propertyRequest)//寫單元測試為了讓result也轉成OKResponse型別嘗試了把IActionResult換成ActionResult<IEnumerable<PropertyResponse>>，再單元測試裡面就再點.Result。這個是比較具名的方法。
+        public IActionResult Get([FromQuery] PropertyRequest propertyRequest)
         {
             var propertyRequestValidator = new PropertyResquestValidator();
             var validationResult = propertyRequestValidator.Validate(propertyRequest);
@@ -23,7 +25,9 @@ namespace PropertyFilterApi.Controllers
             {
                 return BadRequest(validationResult.Errors);
             }
+
             IEnumerable<PropertyResponse> allProperties = _propertiesService.GetProperties();
+            //這裡就要使用在Controller new的 _propertiesService
 
             var result = allProperties;
 
